@@ -6,28 +6,30 @@ public class PlayerMovement : MonoBehaviour
 {
     //Public Variables
     public Settings settings = new Settings();
-    public PlayerAbilities staminaEndurance;
+    private PlayerAbilities staminaEndurance;
 
     public bool isRunning;
     public bool isGrounded;
+    public bool isVaulting;
 
     public Vector3 velocity { private set; get; }
     public float velocityMagnitude { private set; get; }
     public float runTime { private set; get; }
 
     //Private Variables
-    Player playerInput;
+    private Player playerInput;
 
-    Rigidbody rigidbody;
-    Transform transform;
-    CapsuleCollider capsule;
+    private Rigidbody rigidbody;
+    private Transform transform;
+    private CapsuleCollider capsule;
+    private PlayerController playerController;
 
     Vector3 inputDir = Vector3.zero;
     Vector3 groundContactNormal = Vector3.zero;
 
-    bool shouldRun;
+    private bool shouldRun;
 
-    void Awake()
+    private void Awake()
     {
         playerInput = Rewired.ReInput.players.GetPlayer(0);
         playerInput.isPlaying = true;
@@ -37,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         transform = GetComponent<Transform>();
         capsule = GetComponent<CapsuleCollider>();
+        playerController = GetComponent<PlayerController>();
     }
 
     void FixedUpdate()
@@ -44,7 +47,11 @@ public class PlayerMovement : MonoBehaviour
         velocity = rigidbody.velocity;
         velocityMagnitude = velocity.magnitude;
 
-        if (isGrounded)
+        float jumpPressed = playerInput.GetButtonTimePressed("Jump");
+        if (jumpPressed != 0 && jumpPressed < 1f && !isVaulting)
+            CheckVaultAvailability();
+
+        if (isGrounded && !isVaulting)
         {
             if (!isRunning && !shouldRun)
             {
@@ -112,6 +119,67 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+
+    #region Vaulting
+
+    private void CheckVaultAvailability()
+    {
+        //Phase 1, check if there is something in front of us
+        RaycastHit frontRay;
+        if (Physics.Raycast(transform.position, transform.forward, out frontRay, 2))
+        {
+            RaycastHit ledgeRay;
+            if (Physics.Raycast(frontRay.point + (transform.forward * 0.1f) + (Vector3.up * 2), Vector3.down, out ledgeRay, 3))
+            {
+                RaycastHit groundRay;
+                if (Physics.Raycast(frontRay.point + (transform.forward * 0.3f) + (Vector3.up * 2), Vector3.down, out groundRay, 3))
+                {
+                    isVaulting = true;
+                    StartCoroutine(HandleVault(ledgeRay, groundRay.distance));
+                }
+            }
+        }
+    }
+
+    private IEnumerator HandleVault(RaycastHit ledgeRay, float groundDis)
+    {
+        Vector3 startVelocity = rigidbody.velocity;
+        Vector3 startPosition = transform.position;
+        Vector3 endPosition = ledgeRay.point + new Vector3(0, 1f, 0);
+
+        float startTime = Time.time;
+        float lerpSpeed = groundDis > 1.5f ? 3 : groundDis > 1.1f ? 1.2f : 1;
+
+        //Animation
+        if (groundDis > 1.5f)
+        {
+            playerController.cameraAnimation.CrossFade(isRunning ? "FP Camera Vault Low Fast" : "FP Camera Vault Low Slow", 0.05f);
+        }
+
+        yield return new WaitForFixedUpdate();
+
+        //Phase 2, Move Player to ledge
+        while (Time.time - startTime < 1 / lerpSpeed)
+        {
+            transform.position = Vector3.Lerp(startPosition, endPosition, (Time.time - startTime) * lerpSpeed);
+            yield return new WaitForFixedUpdate();
+        }
+
+        if (groundDis > 1.2f)//climb and drop
+        {
+            startVelocity.y = 0;
+            rigidbody.velocity = startVelocity;
+        }
+        else//climb up and pull up
+        {
+            rigidbody.velocity = Vector3.zero;
+        }
+
+
+        isVaulting = false;
+    }
+
+    #endregion
 
     private void GroundCheck()
     {
