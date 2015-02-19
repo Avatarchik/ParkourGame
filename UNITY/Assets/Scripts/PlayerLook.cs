@@ -2,8 +2,10 @@
 using System.Collections;
 using Rewired;
 
-public class CameraRotation : MonoBehaviour 
+public class PlayerLook : MonoBehaviour 
 {
+    public Transform lookX;
+    public Transform lookY;
     public float sensitivity = 5;
 
     Player playerInput;
@@ -22,7 +24,7 @@ public class CameraRotation : MonoBehaviour
         localRotation += new Vector2(playerInput.GetAxisRaw("Look Vertical"), playerInput.GetAxisRaw("Look Horizontal")) * sensitivity;
         localRotation.x = Mathf.Clamp(localRotation.x, -80, 80);
 
-        transform.localEulerAngles = new Vector3(localRotation.x, 0, 0);
-        transform.parent.localEulerAngles = new Vector3(0, localRotation.y, 0);
+        lookX.localEulerAngles = new Vector3(localRotation.x, 0, 0);
+        lookY.localEulerAngles = new Vector3(0, localRotation.y, 0);
     }
 }

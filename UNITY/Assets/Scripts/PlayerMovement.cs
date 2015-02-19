@@ -7,7 +7,11 @@ public class PlayerMovement : MonoBehaviour
     //Public Variables
     public Settings settings = new Settings();
 
+    public bool isRunning;
     public bool isGrounded;
+
+    public Vector3 velocity { private set; get; }
+    public float velocityMagnitude { private set; get; }
 
     //Private Variables
     Player playerInput;
@@ -18,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 inputDir = Vector3.zero;
     Vector3 groundContactNormal = Vector3.zero;
+
+    bool shouldRun;
 
     void Awake()
     {
@@ -31,13 +37,40 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        inputDir.x = playerInput.GetAxisRaw("Horizontal");
-        inputDir.z = playerInput.GetAxisRaw("Vertical");
-        inputDir *= settings.walkSpeed;
-        inputDir = transform.rotation * inputDir;
-        inputDir -= rigidbody.velocity;
-        inputDir = Vector3.ClampMagnitude(inputDir, settings.maxVelocityChange);
-        rigidbody.AddForce(inputDir, ForceMode.VelocityChange);
+        velocity = rigidbody.velocity;
+        velocityMagnitude = velocity.magnitude;
+
+        if (isGrounded)
+        {
+            if (!isRunning && !shouldRun)
+            {
+                float sprintPressed = playerInput.GetButtonTimePressed("Sprint");
+                shouldRun = sprintPressed != 0f && sprintPressed < 1f;
+            }
+
+            if (shouldRun)
+            {
+                isRunning = true;
+                shouldRun = false;
+            }
+
+            inputDir.x = playerInput.GetAxisRaw("Horizontal");
+            inputDir.z = playerInput.GetAxisRaw("Vertical");
+
+            if (isRunning && Mathf.Abs(inputDir.z) < 0.5f)
+                isRunning = false;
+
+            inputDir *= isRunning ? settings.runSpeed : settings.walkSpeed;
+            inputDir = transform.rotation * inputDir;
+            inputDir -= rigidbody.velocity;
+            inputDir = Vector3.ClampMagnitude(inputDir, settings.maxVelocityChange);
+            inputDir.y = 0;
+            rigidbody.AddForce(inputDir, ForceMode.VelocityChange);
+        }
+        else
+        {
+            isRunning = false;
+        }
 
         StickToGroundHelper();
         GroundCheck();
@@ -48,7 +81,6 @@ public class PlayerMovement : MonoBehaviour
         float angle = Vector3.Angle(groundContactNormal, Vector3.up);
         return settings.slopeCurveModifier.Evaluate(angle);
     }
-
 
     private void StickToGroundHelper()
     {
