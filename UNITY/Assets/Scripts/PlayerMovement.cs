@@ -40,6 +40,11 @@ public class PlayerMovement : MonoBehaviour
         velocity = rigidbody.velocity;
         velocityMagnitude = velocity.magnitude;
 
+        print(velocity + ", " + velocityMagnitude + ", " + isGrounded);
+
+        //StickToGroundHelper();
+        GroundCheck();
+
         if (isGrounded)
         {
             if (!isRunning && !shouldRun)
@@ -54,26 +59,24 @@ public class PlayerMovement : MonoBehaviour
                 shouldRun = false;
             }
 
-            inputDir.x = playerInput.GetAxisRaw("Horizontal");
-            inputDir.z = playerInput.GetAxisRaw("Vertical");
+            inputDir.x = playerInput.GetAxis("Horizontal");
+            inputDir.z = playerInput.GetAxis("Vertical");
 
-            if (isRunning && Mathf.Abs(inputDir.z) < 0.5f)
+            if (isRunning && inputDir.z < 0.5f)
                 isRunning = false;
 
             inputDir *= isRunning ? settings.runSpeed : settings.walkSpeed;
             inputDir = transform.rotation * inputDir;
+            inputDir = Vector3.ProjectOnPlane(inputDir, groundContactNormal);
             inputDir -= rigidbody.velocity;
             inputDir = Vector3.ClampMagnitude(inputDir, settings.maxVelocityChange);
-            inputDir.y = 0;
+
             rigidbody.AddForce(inputDir, ForceMode.VelocityChange);
         }
         else
         {
             isRunning = false;
         }
-
-        StickToGroundHelper();
-        GroundCheck();
     }
 
     private float SlopeMultiplier()
