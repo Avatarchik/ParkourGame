@@ -19,6 +19,6 @@ public class PlayerController : MonoBehaviour
 
     void UpdateAnimation()
     {
-        cameraAnimation.SetFloat("velocity", movement.velocityMagnitude);
+        cameraAnimation.SetFloat("velocity", movement.velocityMagnitude, 0.2f, Time.smoothDeltaTime);
     }
 }
