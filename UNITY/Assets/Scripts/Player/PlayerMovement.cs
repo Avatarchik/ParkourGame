@@ -6,12 +6,14 @@ public class PlayerMovement : MonoBehaviour
 {
     //Public Variables
     public Settings settings = new Settings();
+    public PlayerAbilities staminaEndurance;
 
     public bool isRunning;
     public bool isGrounded;
 
     public Vector3 velocity { private set; get; }
     public float velocityMagnitude { private set; get; }
+    public float runTime { private set; get; }
 
     //Private Variables
     Player playerInput;
@@ -29,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
     {
         playerInput = Rewired.ReInput.players.GetPlayer(0);
         playerInput.isPlaying = true;
+
+        staminaEndurance = new PlayerAbilities();
 
         rigidbody = GetComponent<Rigidbody>();
         transform = GetComponent<Transform>();
@@ -60,7 +64,15 @@ public class PlayerMovement : MonoBehaviour
             if (isRunning && Mathf.Abs(inputDir.z) < 0.5f)
                 isRunning = false;
 
-            inputDir *= isRunning ? settings.runSpeed : settings.walkSpeed;
+            if (isRunning && Mathf.Abs(inputDir.z) > 0.5f)
+                runTime += Time.deltaTime;
+
+            if (!isRunning)
+                runTime = 0;
+
+            float endurance = EnduranceLevel();
+
+            inputDir *= isRunning ? Mathf.Clamp(settings.runSpeed * endurance, 0.0f, settings.runSpeed) : settings.walkSpeed;
             inputDir = transform.rotation * inputDir;
             inputDir -= rigidbody.velocity;
             inputDir = Vector3.ClampMagnitude(inputDir, settings.maxVelocityChange);
@@ -74,6 +86,13 @@ public class PlayerMovement : MonoBehaviour
 
         StickToGroundHelper();
         GroundCheck();
+
+    }
+
+    private float EnduranceLevel()
+    {
+        float endurance = staminaEndurance.enduranceLevel.Evaluate(runTime);
+        return endurance;
     }
 
     private float SlopeMultiplier()
