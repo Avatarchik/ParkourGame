@@ -49,6 +49,15 @@
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="ProBuilderCore-Unity5">
+      <HintPath>Assets\ProCore\Prototype\Classes\ProBuilderCore-Unity5.dll</HintPath>
+    </Reference>
+    <Reference Include="ProBuilderMeshOps-Unity5">
+      <HintPath>Assets\ProCore\Prototype\Classes\ProBuilderMeshOps-Unity5.dll</HintPath>
+    </Reference>
+    <Reference Include="ProCore">
+      <HintPath>Assets\ProCore\Shared\Code\ProCore.dll</HintPath>
+    </Reference>
     <Reference Include="Rewired_Core">
       <HintPath>Assets\Rewired\Internal\Libraries\Runtime\Rewired_Core.dll</HintPath>
     </Reference>
@@ -74,12 +83,27 @@
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Scripts\PlayerLook.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <None Include="Assets\ProCore\_README.txt" />
+    <None Include="Assets\ProCore\Prototype\About\changelog.txt" />
+    <None Include="Assets\ProCore\Prototype\About\Credits.txt" />
+    <None Include="Assets\ProCore\Prototype\About\pc_AboutEntry_ProBuilder.txt" />
+    <None Include="Assets\ProCore\Prototype\Shader\DiffuseTextureBlend.shader" />
+    <None Include="Assets\ProCore\Prototype\Shader\DiffuseVertexColor.shader" />
+    <None Include="Assets\ProCore\Prototype\Shader\DiffuseVertexColorEmission.shader" />
+    <None Include="Assets\ProCore\Prototype\Shader\DiffuseVertexColorTransparency.shader" />
+    <None Include="Assets\ProCore\Prototype\Shader\pb_FaceHighlight.shader" />
+    <None Include="Assets\ProCore\Prototype\Shader\pb_VertexShader.shader" />
+    <None Include="Assets\ProCore\Prototype\Shader\UnlitSolidColor.shader" />
+    <None Include="Assets\ProCore\Shared\About\README.txt" />
     <None Include="Assets\Rewired\Documentation\licences.txt" />
     <None Include="Assets\Rewired\Documentation\ReadMe.txt" />
     <None Include="Assets\Rewired\Documentation\ReleaseNotes.txt" />
     <None Include="Assets\Rewired\Internal\Libraries\Runtime\Rewired_Core.XML" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\Standard Assets\Prototyping\Shaders\WorldCoordDiffuse.shader" />
+    <None Include="Assets\ProCore\Prototype\Classes\ProBuilderCore-Unity5.dll" />
+    <None Include="Assets\ProCore\Prototype\Classes\ProBuilderMeshOps-Unity5.dll" />
+    <None Include="Assets\ProCore\Shared\Code\ProCore.dll" />
     <None Include="Assets\Rewired\Internal\Libraries\Runtime\Rewired_Core.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />

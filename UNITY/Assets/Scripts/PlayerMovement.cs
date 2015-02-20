@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
         velocity = rigidbody.velocity;
         velocityMagnitude = velocity.magnitude;
 
-        //StickToGroundHelper();
+        StickToGroundHelper();
         GroundCheck();
 
         float jumpPressed = playerInput.GetButtonTimePressed("Jump");
@@ -66,14 +66,23 @@ public class PlayerMovement : MonoBehaviour
 
             inputDir.x = playerInput.GetAxis("Horizontal");
             inputDir.z = playerInput.GetAxis("Vertical");
+            inputDir = Vector3.ClampMagnitude(inputDir, 1);
 
             if (isRunning && inputDir.z < 0.5f)
                 isRunning = false;
 
-            inputDir *= isRunning ? settings.runSpeed : settings.walkSpeed;
             inputDir = transform.rotation * inputDir;
-            inputDir = Vector3.ProjectOnPlane(inputDir, groundContactNormal);
+            inputDir *= isRunning ? settings.runSpeed : settings.walkSpeed;
+
+            float targetMagnitude = inputDir.magnitude;//Take the current magnitude so that when ProjectOnPlane has a different magnitude, normalize it and multiply
+
+            inputDir = Vector3.ProjectOnPlane(inputDir, groundContactNormal);//Make the input follow the angle of the plane we are standing on
+
+            if (targetMagnitude > 1)//Only normalize and multiply when bigger than X amount because of inprecision
+                inputDir = inputDir.normalized * targetMagnitude;
+            
             inputDir -= rigidbody.velocity;
+
             inputDir = Vector3.ClampMagnitude(inputDir, settings.maxVelocityChange);
 
             rigidbody.AddForce(inputDir, ForceMode.VelocityChange);
@@ -93,9 +102,9 @@ public class PlayerMovement : MonoBehaviour
     private void StickToGroundHelper()
     {
         RaycastHit hitInfo;
-        if (Physics.SphereCast(transform.position, capsule.radius, Vector3.down, out hitInfo, ((capsule.height / 2f) - capsule.radius) + settings.stickToGroundHelperDistance))
+        if (Physics.SphereCast(transform.position + Vector3.up, capsule.radius, Vector3.down, out hitInfo, settings.groundCheckDistance + 1, settings.groundLayer))
         {
-            if (Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 85f)
+            if (Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 60)
             {
                 rigidbody.velocity = Vector3.ProjectOnPlane(rigidbody.velocity, hitInfo.normal);
             }
@@ -105,7 +114,7 @@ public class PlayerMovement : MonoBehaviour
     private void GroundCheck()
     {
         RaycastHit hitInfo;
-        if (Physics.SphereCast(transform.position, capsule.radius, Vector3.down, out hitInfo, ((capsule.height / 2f) - capsule.radius) + settings.groundCheckDistance))
+        if (Physics.SphereCast(transform.position + Vector3.up, capsule.radius, Vector3.down, out hitInfo, settings.groundCheckDistance + 1, settings.groundLayer) && Mathf.Abs(Vector3.Angle(hitInfo.normal, Vector3.up)) < 60)
         {
             isGrounded = true;
             groundContactNormal = hitInfo.normal;
@@ -115,6 +124,17 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
             groundContactNormal = Vector3.up;
         }
+
+        rigidbody.useGravity = !isGrounded;
+    }
+
+    void OnGUI()
+    {
+        GUILayout.Label("isGrounded: " + isGrounded);
+        GUILayout.Label("velocity: " + velocity);
+        GUILayout.Label("velocityMagnitude: " + velocityMagnitude);
+        GUILayout.Label("inputDir: " + inputDir);
+        GUILayout.Label("groundVector: " + groundContactNormal);
     }
 
     #region Vaulting
@@ -178,6 +198,42 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
+    #region Crouching
+
+    bool isHandlingCrouch = false;
+
+    public void SetCrouch(bool crouch, bool playAnim, bool direct)
+    {
+        if (!isHandlingCrouch)
+            StartCoroutine(HandleCrouch(crouch, playAnim, direct));
+    }
+
+    private IEnumerator HandleCrouch(bool crouch, bool playAnim, bool direct)
+    {
+        float targetCamHeight = crouch ? 1.1f : 1.65f;
+        float targetCapHeight = crouch ? 1.2f : 1.8f;
+
+        isHandlingCrouch = true;
+        capsule.height = targetCapHeight;
+
+        if (!direct)
+        {
+            float startTime = Time.time;
+            Vector3 startPos = playerController.cameraHeight.localPosition;
+
+            while ((Time.time - startTime) * 2 < 1)
+            {
+                yield return new WaitForFixedUpdate();
+                playerController.cameraHeight.localPosition = Vector3.Lerp(startPos, new Vector3(0, targetCamHeight, 0), (Time.time - startTime) * 2);
+            }
+        }
+
+        playerController.cameraHeight.localPosition = new Vector3(0, targetCamHeight, 0);
+        isHandlingCrouch = false;
+    }
+
+    #endregion
+
     [System.Serializable]
     public class Settings
     {
@@ -189,5 +245,7 @@ public class PlayerMovement : MonoBehaviour
         public float groundCheckDistance = 0.01f; // distance for checking if the controller is grounded ( 0.01f seems to work best for this )
         public float stickToGroundHelperDistance = 0.5f; // stops the character
         public float maxVelocityChange = 0.25f;
+
+        public LayerMask groundLayer;
     }
 }

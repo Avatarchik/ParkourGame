@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour 
+public class PlayerController : MonoBehaviour
 {
+    public Transform cameraHeight { private set; get; }
     public Animator cameraAnimation;
 
     PlayerMovement movement;
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         movement = GetComponent<PlayerMovement>();
+        cameraHeight = transform.Find("CameraHeight");
     }
 
     void Update()
