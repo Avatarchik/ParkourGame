@@ -1,0 +1,26 @@
+﻿Revert "Fixing conflicts"
+
+This reverts commit 9387143f86a3f5cc76d76dbd7ed7b631a260a52c, reversing
+changes made to b0e590c1708a06e7e1e31254d5149eb9499ce50d.
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   UNITY/Assets/Art/Animations/CameraAnimations.controller
+#	deleted:    UNITY/Assets/Art/Animations/FP Camera Vault Low Fast.anim
+#	deleted:    UNITY/Assets/Art/Animations/FP Camera Vault Low Fast.anim.meta
+#	deleted:    UNITY/Assets/Art/Animations/FP Camera Vault Low Slow.anim
+#	deleted:    UNITY/Assets/Art/Animations/FP Camera Vault Low Slow.anim.meta
+#	modified:   UNITY/Assets/Scripts/Player/PlayerController.cs
+#	deleted:    UNITY/Assets/Standard Assets/Characters/PhysicsMaterials.meta
+#	deleted:    UNITY/Assets/Standard Assets/Characters/PhysicsMaterials/ZeroFriction.physicMaterial
+#	deleted:    UNITY/Assets/Standard Assets/Characters/PhysicsMaterials/ZeroFriction.physicMaterial.meta
+#	modified:   UNITY/UNITY-csharp.v12.suo
+#
+# Changes not staged for commit:
+#	modified:   UNITY/UnityVS.UNITY.v12.suo
+#
+

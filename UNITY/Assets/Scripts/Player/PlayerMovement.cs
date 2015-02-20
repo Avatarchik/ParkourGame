@@ -6,13 +6,15 @@ public class PlayerMovement : MonoBehaviour
 {
     //Public Variables
     public Settings settings = new Settings();
+    private PlayerAbilities staminaEndurance;
 
-    public bool isGrounded;
     public bool isRunning;
+    public bool isGrounded;
     public bool isVaulting;
 
     public Vector3 velocity { private set; get; }
     public float velocityMagnitude { private set; get; }
+    public float runTime { private set; get; }
 
     //Private Variables
     private Player playerInput;
@@ -22,8 +24,8 @@ public class PlayerMovement : MonoBehaviour
     private CapsuleCollider capsule;
     private PlayerController playerController;
 
-    private Vector3 inputDir = Vector3.zero;
-    private Vector3 groundContactNormal = Vector3.zero;
+    Vector3 inputDir = Vector3.zero;
+    Vector3 groundContactNormal = Vector3.zero;
 
     private bool shouldRun;
 
@@ -32,20 +34,25 @@ public class PlayerMovement : MonoBehaviour
         playerInput = Rewired.ReInput.players.GetPlayer(0);
         playerInput.isPlaying = true;
 
+        staminaEndurance = new PlayerAbilities();
+
         rigidbody = GetComponent<Rigidbody>();
         transform = GetComponent<Transform>();
         capsule = GetComponent<CapsuleCollider>();
         playerController = GetComponent<PlayerController>();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         velocity = rigidbody.velocity;
         velocityMagnitude = velocity.magnitude;
 
+<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
         StickToGroundHelper();
         GroundCheck();
 
+=======
+>>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
         float jumpPressed = playerInput.GetButtonTimePressed("Jump");
         if (jumpPressed != 0 && jumpPressed < 1f && !isVaulting)
             CheckVaultAvailability();
@@ -64,13 +71,19 @@ public class PlayerMovement : MonoBehaviour
                 shouldRun = false;
             }
 
+<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
             inputDir.x = playerInput.GetAxis("Horizontal");
             inputDir.z = playerInput.GetAxis("Vertical");
             inputDir = Vector3.ClampMagnitude(inputDir, 1);
+=======
+            inputDir.x = playerInput.GetAxisRaw("Horizontal");
+            inputDir.z = playerInput.GetAxisRaw("Vertical");
+>>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
 
-            if (isRunning && inputDir.z < 0.5f)
+            if (isRunning && Mathf.Abs(inputDir.z) < 0.5f)
                 isRunning = false;
 
+<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
             inputDir = transform.rotation * inputDir;
             inputDir *= isRunning ? settings.runSpeed : settings.walkSpeed;
 
@@ -81,16 +94,38 @@ public class PlayerMovement : MonoBehaviour
             if (targetMagnitude > 1)//Only normalize and multiply when bigger than X amount because of inprecision
                 inputDir = inputDir.normalized * targetMagnitude;
             
+=======
+            if (isRunning && Mathf.Abs(inputDir.z) > 0.5f)
+                runTime += Time.deltaTime;
+
+            if (!isRunning)
+                runTime = 0;
+
+            float endurance = EnduranceLevel();
+
+            inputDir *= isRunning ? Mathf.Clamp(settings.runSpeed * endurance, 0.0f, settings.runSpeed) : settings.walkSpeed;
+            inputDir = transform.rotation * inputDir;
+>>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
             inputDir -= rigidbody.velocity;
 
             inputDir = Vector3.ClampMagnitude(inputDir, settings.maxVelocityChange);
-
+            inputDir.y = 0;
             rigidbody.AddForce(inputDir, ForceMode.VelocityChange);
         }
         else
         {
-
+            isRunning = false;
         }
+
+        StickToGroundHelper();
+        GroundCheck();
+
+    }
+
+    private float EnduranceLevel()
+    {
+        float endurance = staminaEndurance.enduranceLevel.Evaluate(runTime);
+        return endurance;
     }
 
     private float SlopeMultiplier()
@@ -111,6 +146,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
     private void GroundCheck()
     {
         RaycastHit hitInfo;
@@ -137,6 +173,8 @@ public class PlayerMovement : MonoBehaviour
         GUILayout.Label("groundVector: " + groundContactNormal);
     }
 
+=======
+>>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
     #region Vaulting
 
     private void CheckVaultAvailability()
@@ -146,7 +184,7 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.forward, out frontRay, 2))
         {
             RaycastHit ledgeRay;
-            if (Physics.Raycast(frontRay.point + (transform.forward*0.1f) + (Vector3.up*2), Vector3.down, out ledgeRay, 3))
+            if (Physics.Raycast(frontRay.point + (transform.forward * 0.1f) + (Vector3.up * 2), Vector3.down, out ledgeRay, 3))
             {
                 RaycastHit groundRay;
                 if (Physics.Raycast(frontRay.point + (transform.forward * 0.3f) + (Vector3.up * 2), Vector3.down, out groundRay, 3))
@@ -162,7 +200,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 startVelocity = rigidbody.velocity;
         Vector3 startPosition = transform.position;
-        Vector3 endPosition = ledgeRay.point + new Vector3(0,1f,0);
+        Vector3 endPosition = ledgeRay.point + new Vector3(0, 1f, 0);
 
         float startTime = Time.time;
         float lerpSpeed = groundDis > 1.5f ? 3 : groundDis > 1.1f ? 1.2f : 1;
@@ -198,6 +236,7 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
+<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
     #region Crouching
 
     bool isHandlingCrouch = false;
@@ -234,6 +273,23 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
+=======
+    private void GroundCheck()
+    {
+        RaycastHit hitInfo;
+        if (Physics.SphereCast(transform.position, capsule.radius, Vector3.down, out hitInfo, ((capsule.height / 2f) - capsule.radius) + settings.groundCheckDistance))
+        {
+            isGrounded = true;
+            groundContactNormal = hitInfo.normal;
+        }
+        else
+        {
+            isGrounded = false;
+            groundContactNormal = Vector3.up;
+        }
+    }
+
+>>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
     [System.Serializable]
     public class Settings
     {
