@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
         playerInput = Rewired.ReInput.players.GetPlayer(0);
         playerInput.isPlaying = true;
 
-        staminaEndurance = new PlayerAbilities();
+        staminaEndurance = GetComponent<PlayerAbilities>();
 
         rigidbody = GetComponent<Rigidbody>();
         transform = GetComponent<Transform>();
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
             if (!isRunning)
                 runTime = 0;
 
-            float endurance = EnduranceLevel();
+            float endurance = EnduranceLevel(settings.walkSpeed, settings.runSpeed);
 
             inputDir *= isRunning ? Mathf.Clamp(settings.runSpeed * endurance, 0.0f, settings.runSpeed) : settings.walkSpeed;
             inputDir = transform.rotation * inputDir;
@@ -96,10 +96,10 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private float EnduranceLevel()
+    private float EnduranceLevel(float walkSpeed, float runSpeed)
     {
         float endurance = staminaEndurance.enduranceLevel.Evaluate(runTime);
-        return endurance;
+        return Mathf.Clamp(endurance, walkSpeed, runSpeed);
     }
 
     private float SlopeMultiplier()
