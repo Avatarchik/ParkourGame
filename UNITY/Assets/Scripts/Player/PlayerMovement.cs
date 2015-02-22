@@ -47,12 +47,9 @@ public class PlayerMovement : MonoBehaviour
         velocity = rigidbody.velocity;
         velocityMagnitude = velocity.magnitude;
 
-<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
         StickToGroundHelper();
         GroundCheck();
 
-=======
->>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
         float jumpPressed = playerInput.GetButtonTimePressed("Jump");
         if (jumpPressed != 0 && jumpPressed < 1f && !isVaulting)
             CheckVaultAvailability();
@@ -71,55 +68,39 @@ public class PlayerMovement : MonoBehaviour
                 shouldRun = false;
             }
 
-<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
             inputDir.x = playerInput.GetAxis("Horizontal");
             inputDir.z = playerInput.GetAxis("Vertical");
             inputDir = Vector3.ClampMagnitude(inputDir, 1);
-=======
-            inputDir.x = playerInput.GetAxisRaw("Horizontal");
-            inputDir.z = playerInput.GetAxisRaw("Vertical");
->>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
 
-            if (isRunning && Mathf.Abs(inputDir.z) < 0.5f)
+            if (isRunning && inputDir.z < 0.5f)
                 isRunning = false;
 
-<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
             inputDir = transform.rotation * inputDir;
-            inputDir *= isRunning ? settings.runSpeed : settings.walkSpeed;
 
+            float endurance = EnduranceLevel();
+            inputDir *= isRunning ? Mathf.Clamp(settings.runSpeed * endurance, 0.0f, settings.runSpeed) : settings.walkSpeed;
             float targetMagnitude = inputDir.magnitude;//Take the current magnitude so that when ProjectOnPlane has a different magnitude, normalize it and multiply
 
             inputDir = Vector3.ProjectOnPlane(inputDir, groundContactNormal);//Make the input follow the angle of the plane we are standing on
 
-            if (targetMagnitude > 1)//Only normalize and multiply when bigger than X amount because of inprecision
+            if (targetMagnitude > 0.25f)//Only normalize and multiply when bigger than X amount because of inprecision
                 inputDir = inputDir.normalized * targetMagnitude;
-            
-=======
-            if (isRunning && Mathf.Abs(inputDir.z) > 0.5f)
+
+            inputDir -= rigidbody.velocity;
+
+            inputDir = Vector3.ClampMagnitude(inputDir, settings.maxVelocityChange);
+            rigidbody.AddForce(inputDir, ForceMode.VelocityChange);
+
+            if (isRunning && inputDir.z > 0.5f)
                 runTime += Time.deltaTime;
 
             if (!isRunning)
                 runTime = 0;
-
-            float endurance = EnduranceLevel();
-
-            inputDir *= isRunning ? Mathf.Clamp(settings.runSpeed * endurance, 0.0f, settings.runSpeed) : settings.walkSpeed;
-            inputDir = transform.rotation * inputDir;
->>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
-            inputDir -= rigidbody.velocity;
-
-            inputDir = Vector3.ClampMagnitude(inputDir, settings.maxVelocityChange);
-            inputDir.y = 0;
-            rigidbody.AddForce(inputDir, ForceMode.VelocityChange);
         }
         else
         {
             isRunning = false;
         }
-
-        StickToGroundHelper();
-        GroundCheck();
-
     }
 
     private float EnduranceLevel()
@@ -146,7 +127,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
     private void GroundCheck()
     {
         RaycastHit hitInfo;
@@ -173,8 +153,6 @@ public class PlayerMovement : MonoBehaviour
         GUILayout.Label("groundVector: " + groundContactNormal);
     }
 
-=======
->>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
     #region Vaulting
 
     private void CheckVaultAvailability()
@@ -236,7 +214,6 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
-<<<<<<< HEAD:UNITY/Assets/Scripts/PlayerMovement.cs
     #region Crouching
 
     bool isHandlingCrouch = false;
@@ -273,23 +250,6 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
 
-=======
-    private void GroundCheck()
-    {
-        RaycastHit hitInfo;
-        if (Physics.SphereCast(transform.position, capsule.radius, Vector3.down, out hitInfo, ((capsule.height / 2f) - capsule.radius) + settings.groundCheckDistance))
-        {
-            isGrounded = true;
-            groundContactNormal = hitInfo.normal;
-        }
-        else
-        {
-            isGrounded = false;
-            groundContactNormal = Vector3.up;
-        }
-    }
-
->>>>>>> 82d2848ae132d3a8e13add35a95b07cf3d364e79:UNITY/Assets/Scripts/Player/PlayerMovement.cs
     [System.Serializable]
     public class Settings
     {
