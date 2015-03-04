@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     public Settings settings = new Settings();
     private PlayerAbilities staminaEndurance;
 
+    public bool isCrouching;
     public bool isRunning;
     public bool isGrounded;
     public bool isVaulting;
@@ -60,6 +61,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 float sprintPressed = playerInput.GetButtonTimePressed("Sprint");
                 shouldRun = sprintPressed != 0f && sprintPressed < 1f;
+
+                if(playerInput.GetButtonDown("Crouch"))
+                    SetCrouch(!isCrouching, true, false);
             }
 
             if (shouldRun)
@@ -79,12 +83,12 @@ public class PlayerMovement : MonoBehaviour
 
             float endurance = EnduranceLevel(settings.walkSpeed, settings.runSpeed);
 
-            inputDir *= isRunning ? Mathf.Clamp(settings.runSpeed * endurance, 0.0f, settings.runSpeed) : settings.walkSpeed;
+            inputDir *= isRunning ? Mathf.Clamp(settings.runSpeed * endurance, 0.0f, settings.runSpeed) : (isCrouching ? settings.crouchSpeed : settings.walkSpeed);
             float targetMagnitude = inputDir.magnitude;//Take the current magnitude so that when ProjectOnPlane has a different magnitude, normalize it and multiply
 
             inputDir = Vector3.ProjectOnPlane(inputDir, groundContactNormal);//Make the input follow the angle of the plane we are standing on
 
-            if (targetMagnitude > 0.25f)//Only normalize and multiply when bigger than X amount because of inprecision
+            if (targetMagnitude > 1f)//Only normalize and multiply when bigger than X amount because of inprecision
                 inputDir = inputDir.normalized * targetMagnitude;
 
             inputDir -= rigidbody.velocity;
@@ -101,13 +105,15 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isRunning = false;
+
+            if (isCrouching)
+                SetCrouch(false, true, false);
         }
     }
 
     private float EnduranceLevel(float walkSpeed, float runSpeed)
     {
         float endurance = staminaEndurance.enduranceLevel.Evaluate(runTime);
-        return endurance;
         return Mathf.Clamp(endurance, walkSpeed, runSpeed);
     }
 
@@ -233,18 +239,29 @@ public class PlayerMovement : MonoBehaviour
 
         isHandlingCrouch = true;
         capsule.height = targetCapHeight;
+        capsule.center = new Vector3(0, targetCapHeight / 2, 0);
+        isCrouching = crouch;
+
+        if (playAnim)
+        {
+            playerController.cameraAnimation.SetLayerWeight(1, 1);
+            playerController.cameraAnimation.Play(crouch ? "FP Camera StandToCrouch" : "FP Camera CrouchToStand", 1, 0);
+        }
 
         if (!direct)
         {
             float startTime = Time.time;
             Vector3 startPos = playerController.cameraHeight.localPosition;
 
-            while ((Time.time - startTime) * 2 < 1)
+            while ((Time.time - startTime)*1.2f < 1)
             {
                 yield return new WaitForFixedUpdate();
-                playerController.cameraHeight.localPosition = Vector3.Lerp(startPos, new Vector3(0, targetCamHeight, 0), (Time.time - startTime) * 2);
+                playerController.cameraHeight.localPosition = Vector3.Lerp(startPos, new Vector3(0, targetCamHeight, 0), (Time.time - startTime)*1.25f);
             }
         }
+
+        if (playAnim)
+            playerController.cameraAnimation.SetLayerWeight(1, 0);
 
         playerController.cameraHeight.localPosition = new Vector3(0, targetCamHeight, 0);
         isHandlingCrouch = false;
@@ -255,6 +272,7 @@ public class PlayerMovement : MonoBehaviour
     [System.Serializable]
     public class Settings
     {
+        public float crouchSpeed = 2;
         public float walkSpeed = 5;
         public float runSpeed = 10;
 

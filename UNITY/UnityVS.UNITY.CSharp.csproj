@@ -22,7 +22,7 @@
     <OutputPath>Temp\UnityVS_bin\Debug\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_0_0;UNITY_5_0;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_NEW_HIERARCHY;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_AUDIOMIXER_SUSPEND;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;CROSS_PLATFORM_INPUT</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_0_0;UNITY_5_0;UNITY_5;ENABLE_LICENSE_RENAME;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_NEW_HIERARCHY;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_AUDIOMIXER_SUSPEND;ENABLE_NONPRO;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;CROSS_PLATFORM_INPUT</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <OutputPath>Temp\UnityVS_bin\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DefineConstants>TRACE;UNITY_5_0_0;UNITY_5_0;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_NEW_HIERARCHY;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_AUDIOMIXER_SUSPEND;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;CROSS_PLATFORM_INPUT</DefineConstants>
+    <DefineConstants>TRACE;UNITY_5_0_0;UNITY_5_0;UNITY_5;ENABLE_LICENSE_RENAME;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_NEW_HIERARCHY;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_AUDIOMIXER_SUSPEND;ENABLE_NONPRO;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;UNITY_PRO_LICENSE;CROSS_PLATFORM_INPUT</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -72,6 +72,28 @@
     <Compile Include="Assets\Art\Shaders\Post-Processing\AmbientOcclusion\SSAO.cs" />
     <Compile Include="Assets\Art\Shaders\Post-Processing\Tonemap\Tonemap.cs" />
     <Compile Include="Assets\Art\Shaders\Post-Processing\Utilities\PostFXEngine.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Effects\Trails\SmokePlume.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Effects\Trails\SmokeTrail.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Effects\Trails\SmoothTrail.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Effects\Trails\Trail.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Effects\Trails\TrailRenderer_Base.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Shared\Generic\VersionInformation.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Shared\Utillities\CircularBuffer.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Shared\Utillities\GizmosExtra.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\Shared\Utillities\Range.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\AlwaysForward.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\ConstForce.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\DestroyAfterTime.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\FPSController.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\FPSWeaponTrigger.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\MouseFollower.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\Orbiter.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\PitchShifter.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankAlwaysForward.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankController.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankProjectile.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankTranslator.cs" />
+    <Compile Include="Assets\PigeonCoopToolkit\__Effects (Trails) Examples\Scripts\TankWeaponController.cs" />
     <Compile Include="Assets\Rewired\Examples\ControlRemapping1\Scripts\ControlRemappingDemo1.cs" />
     <Compile Include="Assets\Rewired\Examples\CustomControllersTouch\Scripts\CustomControllerDemo.cs" />
     <Compile Include="Assets\Rewired\Examples\CustomControllersTouch\Scripts\CustomControllerDemo_Player.cs" />
@@ -88,7 +110,14 @@
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerLook.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
-<<<<<<< HEAD
+    <Compile Include="Assets\Scripts\Utilities\AttributeMath.cs" />
+    <None Include="Assets\Art\Shaders\Post-Processing\AmbientOcclusion\AmbientOcclusion.cginc" />
+    <None Include="Assets\Art\Shaders\Post-Processing\AmbientOcclusion\SSAO.shader" />
+    <None Include="Assets\Art\Shaders\Post-Processing\Tonemap\Tonemap.shader" />
+    <None Include="Assets\PigeonCoopToolkit\__SharedDemoAssets\_Shaders\DiffuseColorMask.shader" />
+    <None Include="Assets\PigeonCoopToolkit\__SharedDemoAssets\_Shaders\Unlit Transparent Color.shader" />
+    <None Include="Assets\PigeonCoopToolkit\__SharedDemoAssets\a-104 Rifle\a-104 Rifle License.txt" />
+    <None Include="Assets\PigeonCoopToolkit\__SharedDemoAssets\Sword\sword License.txt" />
     <None Include="Assets\ProCore\_README.txt" />
     <None Include="Assets\ProCore\Prototype\About\changelog.txt" />
     <None Include="Assets\ProCore\Prototype\About\Credits.txt" />
@@ -101,12 +130,6 @@
     <None Include="Assets\ProCore\Prototype\Shader\pb_VertexShader.shader" />
     <None Include="Assets\ProCore\Prototype\Shader\UnlitSolidColor.shader" />
     <None Include="Assets\ProCore\Shared\About\README.txt" />
-=======
-    <Compile Include="Assets\Scripts\Utilities\AttributeMath.cs" />
-    <None Include="Assets\Art\Shaders\Post-Processing\AmbientOcclusion\AmbientOcclusion.cginc" />
-    <None Include="Assets\Art\Shaders\Post-Processing\AmbientOcclusion\SSAO.shader" />
-    <None Include="Assets\Art\Shaders\Post-Processing\Tonemap\Tonemap.shader" />
->>>>>>> origin/Fixed
     <None Include="Assets\Rewired\Documentation\licences.txt" />
     <None Include="Assets\Rewired\Documentation\ReadMe.txt" />
     <None Include="Assets\Rewired\Documentation\ReleaseNotes.txt" />
