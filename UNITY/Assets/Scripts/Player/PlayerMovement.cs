@@ -167,7 +167,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //Phase 1, check if there is something in front of us
         RaycastHit frontRay;
-        if (Physics.Raycast(transform.position, transform.forward, out frontRay, 2))
+        if (Physics.Raycast(transform.position + capsule.center, transform.forward, out frontRay, 2))
         {
             RaycastHit ledgeRay;
             if (Physics.Raycast(frontRay.point + (transform.forward * 0.1f) + (Vector3.up * 2), Vector3.down, out ledgeRay, 3))
@@ -186,7 +186,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 startVelocity = rigidbody.velocity;
         Vector3 startPosition = transform.position;
-        Vector3 endPosition = ledgeRay.point + new Vector3(0, 1f, 0);
+        Vector3 endPosition = ledgeRay.point;
 
         float startTime = Time.time;
         float lerpSpeed = groundDis > 1.5f ? 3 : groundDis > 1.1f ? 1.2f : 1;
@@ -199,12 +199,17 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForFixedUpdate();
 
+        SetCrouch(true, false, false, lerpSpeed);
+        isHandlingCrouch = false;
+
         //Phase 2, Move Player to ledge
         while (Time.time - startTime < 1 / lerpSpeed)
         {
             transform.position = Vector3.Lerp(startPosition, endPosition, (Time.time - startTime) * lerpSpeed);
             yield return new WaitForFixedUpdate();
         }
+
+        SetCrouch(false, true, false, 2);
 
         if (groundDis > 1.2f)//climb and drop
         {
@@ -229,10 +234,22 @@ public class PlayerMovement : MonoBehaviour
     public void SetCrouch(bool crouch, bool playAnim, bool direct)
     {
         if (!isHandlingCrouch)
-            StartCoroutine(HandleCrouch(crouch, playAnim, direct));
+        {
+            StopCoroutine("HandleCrouch");
+            StartCoroutine(HandleCrouch(crouch, playAnim, direct, 1.5f));
+        }
     }
 
-    private IEnumerator HandleCrouch(bool crouch, bool playAnim, bool direct)
+    public void SetCrouch(bool crouch, bool playAnim, bool direct, float lerpspeed)
+    {
+        if (!isHandlingCrouch)
+        {
+            StopCoroutine("HandleCrouch");
+            StartCoroutine(HandleCrouch(crouch, playAnim, direct, lerpspeed));
+        }
+    }
+
+    private IEnumerator HandleCrouch(bool crouch, bool playAnim, bool direct, float lerpspeed)
     {
         float targetCamHeight = crouch ? 1.1f : 1.65f;
         float targetCapHeight = crouch ? 1.2f : 1.8f;
@@ -253,10 +270,10 @@ public class PlayerMovement : MonoBehaviour
             float startTime = Time.time;
             Vector3 startPos = playerController.cameraHeight.localPosition;
 
-            while ((Time.time - startTime)*1.2f < 1)
+            while ((Time.time - startTime) * lerpspeed <= 1)
             {
                 yield return new WaitForFixedUpdate();
-                playerController.cameraHeight.localPosition = Vector3.Lerp(startPos, new Vector3(0, targetCamHeight, 0), (Time.time - startTime)*1.25f);
+                playerController.cameraHeight.localPosition = Vector3.Lerp(startPos, new Vector3(0, targetCamHeight, 0), (Time.time - startTime) * lerpspeed);
             }
         }
 
